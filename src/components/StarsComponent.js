@@ -3,9 +3,17 @@ import StarComponent from './StarComponent';
 import { getFilledArray, getRandomSquares } from '../Utils';
 
 const StarsComponent = (props) => {
-  const squareSize = 50;
+  const divStyle = {
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "black",
+    width: props.width,
+    height: props.height
+  };
+
+  const squareSize = props.starSize;
   const numbers = getFilledArray(props.number);
-  const squares = getRandomSquares(props.number, squareSize, props.height, props.width);
+  const squares = getRandomSquares(props.number, squareSize, props.height - divStyle.borderWidth, props.width - divStyle.borderWidth);
 
   let numbersAndSquares = [];
   //TODO: Do that in a better way
@@ -17,13 +25,6 @@ const StarsComponent = (props) => {
         top: squares[index].top
       });
   }
-
-  const divStyle = {
-    border: "1px solid black",
-    width: props.width,
-    height: props.height
-  };
-
   return (
     <>
       <div className="row" style={divStyle} >

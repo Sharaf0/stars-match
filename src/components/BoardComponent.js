@@ -5,7 +5,7 @@ const BoardComponent = () => {
   return (
     <div className="row">
       <div style={{ textAlign: "center" }} className="col-lg-6">
-        <StarsComponent number={9} height={400} width={400}></StarsComponent>
+        <StarsComponent number={9} height={400} width={400} starSize={50}></StarsComponent>
       </div>
       <div style={{ textAlign: "center" }} className="col-lg-6">
         <NumbersComponent></NumbersComponent>

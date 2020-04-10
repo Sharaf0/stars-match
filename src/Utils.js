@@ -42,8 +42,10 @@ export function getRandomSquares(length, size, height, width) {
     //TODO: Merge those two statements.
     const point = getRandomPoint(height - size, width - size);
     const newSquare = { left: point.x, top: point.y };
-    if (!squares.some(s => squaresIntersects(s, newSquare, size)))
+    if (!squares.some(s => squaresIntersects(s, newSquare, size))) {
       squares.push(newSquare);
+      counter = 0;
+    }
     counter ++;
     if(counter === 1e6)
       throw new Error("Infinite loop detected!");
