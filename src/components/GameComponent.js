@@ -33,6 +33,7 @@ const GameComponent = () => {
 
   useEffect(() => {
     restartGame();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);//TODO: Fix dependencies
 
   //TODO: Is here the right place?
