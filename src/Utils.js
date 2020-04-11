@@ -35,6 +35,13 @@ function squaresIntersects(s1, s2, size) {
   })
 }
 
+export function removeRandomElements(array, n) {
+  while (n--) {
+    array.splice(Math.floor(Math.random() * array.length), 1);
+  }
+  return array;
+}
+
 export function getRandomSquares(length, size, height, width) {
   let squares = [];
   let counter = 0;
@@ -46,8 +53,8 @@ export function getRandomSquares(length, size, height, width) {
       squares.push(newSquare);
       counter = 0;
     }
-    counter ++;
-    if(counter === 1e6)
+    counter++;
+    if (counter === 1e6)
       throw new Error("Infinite loop detected!");
   }
   return squares;

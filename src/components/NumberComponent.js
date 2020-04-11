@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 const NumberComponent = (props) => {
   const [hovered, setHover] = useState(false);
 
-  const toggleHover = () => {
-    setHover(!hovered);
+  const toggleHover = (isHovered) => {
+    setHover(isHovered);
   }
 
   const divStyle = {
@@ -24,13 +24,13 @@ const NumberComponent = (props) => {
 
   switch (props.status) {
     case "TAKEN":
-      divStyle.backgroundColor = "lightgrey";
+      divStyle.backgroundColor = "lightgreen";
       break;
     case "MARKED":
       divStyle.backgroundColor = "lightblue";
       break;
     case "WRONG":
-      divStyle.backgroundColor = "lightred";
+      divStyle.backgroundColor = "orangered";
       break;
     case "DEFAULT":
       divStyle.backgroundColor = "transparent";
@@ -39,7 +39,12 @@ const NumberComponent = (props) => {
       throw new Error(`Number status ${props.status} is not considered as a valid status`);
   }
   return (
-    <div className="col-lg-3" style={divStyle} onClick={() => props.onNumberClick(props)} onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
+    <div className="col-lg-3"
+      style={divStyle}
+      onClick={() => props.onNumberClick(props)}
+      onMouseEnter={() => toggleHover(true)}
+      onMouseLeave={() => toggleHover(false)}
+    >
       <h3>{props.value}</h3>
     </div>
   );

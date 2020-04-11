@@ -11,7 +11,7 @@ const NumbersComponent = (props) => {
 NumbersComponent.propTypes = {
   numbers: PropTypes.arrayOf(PropTypes.shape({
     number: PropTypes.number.isRequired,
-    status: PropTypes.string.isRequired
+    status: PropTypes.string.isRequired,
   })).isRequired,
   onNumberClick: PropTypes.func.isRequired
 };

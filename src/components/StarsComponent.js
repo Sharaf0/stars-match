@@ -1,6 +1,7 @@
 import React from 'react';
 import StarComponent from './StarComponent';
 import { getFilledArray, getRandomSquares } from '../Utils';
+import PropTypes from 'prop-types';
 
 const StarsComponent = (props) => {
   const divStyle = {
@@ -33,6 +34,13 @@ const StarsComponent = (props) => {
           </StarComponent>)}
       </div>
     </>)
+};
+
+StarsComponent.propTypes = {
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
+  number: PropTypes.number.isRequired,
+  starSize: PropTypes.number.isRequired
 };
 
 export default StarsComponent;
