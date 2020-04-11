@@ -9,8 +9,8 @@ var oneDay = 86400000;
 
 app.use(compress());
 app.use(morgan());
-app.use(express.static('filesdir', { maxAge: oneDay }));
-app.use(directory('filesdir', {'icons': true}))
+app.use(express.static('.', { maxAge: oneDay }));
+app.use(directory('.', {'icons': true}))
 
 app.listen(process.env.PORT || 8000);
 
