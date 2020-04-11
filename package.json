@@ -1,0 +1,20 @@
+{
+  "name": "stars-match",
+  "version": "1.0.0",
+  "description": "",
+  "main": "precache-manifest.ec3aae6f599a6182038400869f9b222f.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sharaf0/stars-match.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sharaf0/stars-match/issues"
+  },
+  "homepage": "https://github.com/Sharaf0/stars-match#readme"
+}
