@@ -1,4 +1,4 @@
-Live version of the game can be seen here: https://stars-match-game.herokuapp.com/
+Live version of the game can be seen [here](https://sharaf0.github.io/stars-match/)!
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
