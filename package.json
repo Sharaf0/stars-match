@@ -2,7 +2,6 @@
   "name": "stars-match",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://sharaf0.github.io/stars-match/",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",

@@ -156,7 +156,7 @@ const GameComponent = () => {
       </div>
     </div>
     <div style={{ textAlign: "center" }}>
-      <span>Can't go further?</span>
+      <span>Can't go further? </span>
       <button onClick={restartGame}>Play again?</button>
     </div>
   </div>
