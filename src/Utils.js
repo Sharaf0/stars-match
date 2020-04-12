@@ -1,9 +1,5 @@
 export const getFilledArray = (length) => {
-  let a = [];
-  for (let index = 0; index < length; index++) {
-    a.push(index + 1);
-  }
-  return a;
+  return [...Array(length).keys()].map(n => n + 1);
 }
 
 function getRandomPoint(height, width) {

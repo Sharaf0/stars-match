@@ -1,8 +1,76 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { getFilledArray, removeRandomElements } from "../Utils";
+import React, { useState, useEffect, useCallback, useReducer, useMemo } from "react";
+import { getFilledArray } from "../Utils";
 import NumbersComponent from "./NumbersComponent";
 import StarsComponent from "./StarsComponent";
 import _ from "lodash";
+
+const initializeNumbersReducer = (gameLimit) => {
+  return getFilledArray(gameLimit).map((n) => ({
+    number: n,
+    status: "DEFAULT",
+  }));;
+}
+
+const numbersReducer = (state, action) => {
+  switch (action.type) {
+    case "INIT":
+      return initializeNumbersReducer(action.gameLimit);
+    case "CLICKED_ON_DEFAULT":
+      const sumOfMarkedAndWrong =
+        state
+          .filter((n) => n.status === "MARKED" || n.status === "WRONG")
+          .map((n) => n.number)
+          .reduce((sum, current) => sum + current, 0) + action.number;
+      if (sumOfMarkedAndWrong === action.currentStarsCount) {
+        return state.map(element =>
+          element.status === "MARKED" || element.number === action.number ?
+            { ...element, status: "TAKEN" } : element);
+      }
+      if (sumOfMarkedAndWrong > action.currentStarsCount) {
+        return state.map(element => element.status === "MARKED" || element.number === action.number ?
+          { ...element, status: "WRONG" } : element);
+      }
+      if (sumOfMarkedAndWrong < action.currentStarsCount) {
+        if (_.some(state, (n) => n.status === "WRONG"))
+          return state.map(element => element.number === action.number ? { ...element, status: "WRONG" } : element);
+        else
+          return state.map(element => element.number === action.number ? { ...element, status: "MARKED" } : element);
+      }
+      break;
+    case "CLICKED_ON_MARKED":
+      return state.map(element => element.number === action.number ? { ...element, status: "DEFAULT" } : element);
+    case "CLICKED_ON_TAKEN":
+      break;
+    case "CLICKED_ON_WRONG":
+      const sumOfWrong =
+        state
+          .filter((n) => n.status === "WRONG")
+          .map((n) => n.number)
+          .reduce((sum, current) => sum + current, 0) - action.number;
+      if (sumOfWrong === action.currentStarsCount)
+        return state.map(element =>
+          (element.status === "WRONG" && element.number !== action.number) ?
+            { ...element, status: "TAKEN" } :
+            (element.number === action.number) ?
+              { ...element, status: "DEFAULT" } :
+              element
+        );
+      if (sumOfWrong > action.currentStarsCount)
+        return state.map(element => element.number === action.number ? { ...element, status: "DEFAULT" } : element);
+      if (sumOfWrong < action.currentStarsCount)
+        return state.map(element =>
+          (element.status === "WRONG" && element.number !== action.number) ?
+            { ...element, status: "MARKED" } :
+            (element.number === action.number) ?
+              { ...element, status: "DEFAULT" } :
+              element
+        );
+      break;
+    default:
+      break;
+  }
+  return state;
+}
 
 const GameComponent = () => {
   //TODO: Move this Config to .json or so
@@ -10,159 +78,62 @@ const GameComponent = () => {
   const starSize = 50;
   const starsHeight = 400;
   const starsWidth = 400;
-  const [notShownStarsCounts, setNotShownStarsCounts] = useState([]);
-  const [numbers, setNumbers] = useState();
-  const [currentStarsCount, setCurrentStarsCount] = useState();
-
-  //TODO: This function is a horror
-  const setCurrentStarsCountWithNewValue = useCallback((copyOfNotShownStarsCounts, init) => {
-    //TODO: Fix that
-    if (currentStarsCount !== -1 && init === false) {
-      copyOfNotShownStarsCounts = _.without(
-        copyOfNotShownStarsCounts,
-        currentStarsCount
-      );
-    }
-    if (copyOfNotShownStarsCounts.length !== 0) {
-      const number =
-        copyOfNotShownStarsCounts[
-        Math.floor(Math.random() * copyOfNotShownStarsCounts.length)
-        ];
-      setCurrentStarsCount(number);
-    }
-    setNotShownStarsCounts(copyOfNotShownStarsCounts);
-  }, [currentStarsCount]);
+  const [numbers, dispatchNumbers] = useReducer(numbersReducer, gameLimit, initializeNumbersReducer);
+  const [currentStarsCount, setCurrentStarsCount] = useState(0);
+  const [isGameOver, setIsGameOver] = useState(false);
 
   useEffect(() => {
-    restartGame();
+    initGame();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); //TODO: Fix dependencies
+  }, []);
 
-  //TODO: Is here the right place?
+  const getNextStarsCount = useCallback(() => {
+    if (numbers.length === 0)
+      return 0;
+    if (numbers.length === 1)
+      return 0;
+    return _.shuffle(
+      numbers
+        .filter(number => number.status === "DEFAULT")
+        .map(n => n.number)
+    )
+      .slice(0, 2)
+      .reduce((sum, current) => sum + current, 0);
+  }, [numbers]);
+
   const onNumberClick = useCallback((number) => {
-    const copyOfNumbers = [...numbers];
     switch (number.status) {
       case "TAKEN":
+        dispatchNumbers({ type: "CLICKED_ON_TAKEN", number: number.value, currentStarsCount });
         return;
       case "MARKED":
-        //Unmark the number
-        copyOfNumbers[
-          _.findIndex(copyOfNumbers, (n) => n.number === number.value)
-        ].status = "DEFAULT";
-        setNumbers(copyOfNumbers);
+        dispatchNumbers({ type: "CLICKED_ON_MARKED", number: number.value, currentStarsCount });
         return;
       case "WRONG":
-        const sumOfWrong =
-          copyOfNumbers
-            .filter((n) => n.status === "WRONG")
-            .map((n) => n.number)
-            .reduce((sum, current) => sum + current, 0) - number.value;
-        if (sumOfWrong === currentStarsCount) {
-          //TODO: Do that in a better way.
-          for (let index = 0; index < copyOfNumbers.length; index++) {
-            const element = copyOfNumbers[index];
-            if (element.status === "WRONG" && element.number !== number.value)
-              element.status = "TAKEN";
-            else if (element.number === number.value) {
-              element.status = "DEFAULT";
-            }
-          }
-          //TODO: Why Stars are rendered when I call that?
-          setNumbers(copyOfNumbers);
-          setCurrentStarsCountWithNewValue(notShownStarsCounts, false);
-          return;
-        }
-        if (sumOfWrong > currentStarsCount) {
-          copyOfNumbers[
-            _.findIndex(copyOfNumbers, (n) => n.number === number.value)
-          ].status = "DEFAULT";
-          setNumbers(copyOfNumbers);
-        }
-        if (sumOfWrong < currentStarsCount) {
-          for (let index = 0; index < copyOfNumbers.length; index++) {
-            const element = copyOfNumbers[index];
-            if (element.status === "WRONG" && element.number !== number.value)
-              element.status = "MARKED";
-            else if (element.number === number.value) {
-              element.status = "DEFAULT";
-            }
-          }
-          setNumbers(copyOfNumbers);
-          return;
-        }
-        break;
+        dispatchNumbers({ type: "CLICKED_ON_WRONG", number: number.value, currentStarsCount });
+        return;
       case "DEFAULT":
-        const sumOfMarkedAndWrong =
-          copyOfNumbers
-            .filter((n) => n.status === "MARKED" || n.status === "WRONG")
-            .map((n) => n.number)
-            .reduce((sum, current) => sum + current, 0) + number.value;
-        if (sumOfMarkedAndWrong === currentStarsCount) {
-          //TODO: Do that in a better way.
-          for (let index = 0; index < copyOfNumbers.length; index++) {
-            const element = copyOfNumbers[index];
-            if (element.status === "MARKED" || element.number === number.value)
-              element.status = "TAKEN";
-          }
-          setNumbers(copyOfNumbers);
-          setCurrentStarsCountWithNewValue(notShownStarsCounts, false);
-          return;
-        }
-        if (sumOfMarkedAndWrong > currentStarsCount) {
-          for (let index = 0; index < copyOfNumbers.length; index++) {
-            const element = copyOfNumbers[index];
-            if (element.status === "MARKED" || element.number === number.value)
-              element.status = "WRONG";
-          }
-          setNumbers(copyOfNumbers);
-          return;
-        }
-        if (sumOfMarkedAndWrong < currentStarsCount) {
-          if (_.some(copyOfNumbers, (n) => n.status === "WRONG")) {
-            //Mark number in numbers
-            copyOfNumbers[
-              copyOfNumbers.findIndex((n) => n.number === number.value)
-            ].status = "WRONG";
-          } else {
-            copyOfNumbers[
-              copyOfNumbers.findIndex((n) => n.number === number.value)
-            ].status = "MARKED";
-          }
-          setNumbers(copyOfNumbers);
-          return;
-        }
-        break;
+        dispatchNumbers({ type: "CLICKED_ON_DEFAULT", number: number.value, currentStarsCount });
+        return;
       default:
         throw new Error(
           `Number status ${number.status} is not considered as a valid status`
         );
     }
-  }, [currentStarsCount, numbers, notShownStarsCounts, setCurrentStarsCountWithNewValue]);
+  }, [currentStarsCount]);
 
-  const restartGame = () => {
-    const initialNumbers = getFilledArray(gameLimit).map((n) => ({
-      number: n,
-      status: "DEFAULT",
-    }));
-    const initialNotShownStarsCounts = getFilledArray(gameLimit + gameLimit / 2);
-
-    let copyOfInitialNotShownStarsCounts = [...initialNotShownStarsCounts];
-    copyOfInitialNotShownStarsCounts = removeRandomElements(
-      copyOfInitialNotShownStarsCounts,
-      copyOfInitialNotShownStarsCounts.length - 5
-    );
-    setNotShownStarsCounts(copyOfInitialNotShownStarsCounts);
-    setNumbers(initialNumbers);
-    setCurrentStarsCount(-1);
-    setCurrentStarsCountWithNewValue(copyOfInitialNotShownStarsCounts, true);
+  const initGame = () => {
+    setIsGameOver(false);
+    dispatchNumbers({ type: "INIT", gameLimit });
+    setCurrentStarsCount(getNextStarsCount());
   };
 
-  if (notShownStarsCounts.length === 0)
+  if (isGameOver)
     return (
       <div style={{ textAlign: "center" }}>
         You Won
         <div>
-          <button onClick={restartGame}>Play again?</button>
+          <button onClick={initGame}>Play again?</button>
         </div>
       </div>
     );
@@ -187,7 +158,7 @@ const GameComponent = () => {
       </div>
       <div style={{ textAlign: "center" }}>
         <span>Can't go further? </span>
-        <button onClick={restartGame}>Play again?</button>
+        <button onClick={initGame}>Play again?</button>
       </div>
     </div>
   );
