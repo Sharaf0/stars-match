@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import StarComponent from './StarComponent';
 import { getFilledArray, getRandomSquares } from '../Utils';
 import PropTypes from 'prop-types';
@@ -13,19 +13,18 @@ const StarsComponent = (props) => {
   };
 
   const squareSize = props.starSize;
-  const numbers = getFilledArray(props.number);
-  const squares = getRandomSquares(props.number, squareSize, props.height - divStyle.borderWidth, props.width - divStyle.borderWidth);
 
-  let numbersAndSquares = [];
+  const numbersAndSquares = useMemo(() => {
+    const numbers = getFilledArray(props.number);
+    const squares = getRandomSquares(props.number, squareSize, props.height - divStyle.borderWidth, props.width - divStyle.borderWidth);
+    return squares.map((square, index) => ({
+      number: numbers[index],
+      left: square.left,
+      top: square.top
+    }));
+  }, [divStyle.borderWidth, props.height, props.width, props.number, squareSize]);
   //TODO: Do that in a better way
-  for (let index = 0; index < numbers.length; index++) {
-    numbersAndSquares.push(
-      {
-        number: numbers[index],
-        left: squares[index].left,
-        top: squares[index].top
-      });
-  }
+
   return (
     <>
       <div className="row" style={divStyle} >
