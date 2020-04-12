@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/static/css/main.69eda509.chunk.css",
-    "main.js": "/static/js/main.9bb9117f.chunk.js",
-    "main.js.map": "/static/js/main.9bb9117f.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.5b257f1b.js",
-    "runtime-main.js.map": "/static/js/runtime-main.5b257f1b.js.map",
-    "static/css/2.de424728.chunk.css": "/static/css/2.de424728.chunk.css",
-    "static/js/2.e915cd4a.chunk.js": "/static/js/2.e915cd4a.chunk.js",
-    "static/js/2.e915cd4a.chunk.js.map": "/static/js/2.e915cd4a.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.ec3aae6f599a6182038400869f9b222f.js": "/precache-manifest.ec3aae6f599a6182038400869f9b222f.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/2.de424728.chunk.css.map": "/static/css/2.de424728.chunk.css.map",
-    "static/css/main.69eda509.chunk.css.map": "/static/css/main.69eda509.chunk.css.map",
-    "static/js/2.e915cd4a.chunk.js.LICENSE.txt": "/static/js/2.e915cd4a.chunk.js.LICENSE.txt"
+    "main.css": "/Sharaf0/Sharaf0.github.io/stars/static/css/main.69eda509.chunk.css",
+    "main.js": "/Sharaf0/Sharaf0.github.io/stars/static/js/main.1427cc37.chunk.js",
+    "main.js.map": "/Sharaf0/Sharaf0.github.io/stars/static/js/main.1427cc37.chunk.js.map",
+    "runtime-main.js": "/Sharaf0/Sharaf0.github.io/stars/static/js/runtime-main.53613590.js",
+    "runtime-main.js.map": "/Sharaf0/Sharaf0.github.io/stars/static/js/runtime-main.53613590.js.map",
+    "static/css/2.de424728.chunk.css": "/Sharaf0/Sharaf0.github.io/stars/static/css/2.de424728.chunk.css",
+    "static/js/2.e915cd4a.chunk.js": "/Sharaf0/Sharaf0.github.io/stars/static/js/2.e915cd4a.chunk.js",
+    "static/js/2.e915cd4a.chunk.js.map": "/Sharaf0/Sharaf0.github.io/stars/static/js/2.e915cd4a.chunk.js.map",
+    "index.html": "/Sharaf0/Sharaf0.github.io/stars/index.html",
+    "precache-manifest.88df74941b5c75de8a4625f17414d146.js": "/Sharaf0/Sharaf0.github.io/stars/precache-manifest.88df74941b5c75de8a4625f17414d146.js",
+    "service-worker.js": "/Sharaf0/Sharaf0.github.io/stars/service-worker.js",
+    "static/css/2.de424728.chunk.css.map": "/Sharaf0/Sharaf0.github.io/stars/static/css/2.de424728.chunk.css.map",
+    "static/css/main.69eda509.chunk.css.map": "/Sharaf0/Sharaf0.github.io/stars/static/css/main.69eda509.chunk.css.map",
+    "static/js/2.e915cd4a.chunk.js.LICENSE.txt": "/Sharaf0/Sharaf0.github.io/stars/static/js/2.e915cd4a.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.5b257f1b.js",
+    "static/js/runtime-main.53613590.js",
     "static/css/2.de424728.chunk.css",
     "static/js/2.e915cd4a.chunk.js",
     "static/css/main.69eda509.chunk.css",
-    "static/js/main.9bb9117f.chunk.js"
+    "static/js/main.1427cc37.chunk.js"
   ]
 }
