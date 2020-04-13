@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useReducer } from "react";
+import React, { useEffect, useCallback, useReducer, useMemo } from "react";
 import { getFilledArray } from "../Utils";
 import NumbersComponent from "./NumbersComponent";
 import StarsComponent from "./StarsComponent";
@@ -7,6 +7,9 @@ import _ from "lodash";
 const getNextStarsCount = (numbers) => {
   //FIXME: This function is getting called multiple times.
   const nums = numbers.filter(number => number.status === "DEFAULT").map(n => n.number);
+
+  if (nums.length === 0)
+    return 0;
 
   if (nums.length === 1)
     return nums[0];
@@ -112,7 +115,9 @@ const GameComponent = () => {
   const starsWidth = 400;
   const [numbers, dispatchNumbers] = useReducer(numbersReducer, gameLimit, initializeNumbersReducer);
   const [currentStarsCount, dispatchStarsCount] = useReducer(starsReducer, numbers, getNextStarsCount);
-  const [isGameOver, setIsGameOver] = useState(false);
+  const isGameOver = useMemo(() => {
+    return currentStarsCount === 0;
+  }, [currentStarsCount]);
 
   useEffect(() => {
     initGame();
@@ -145,15 +150,16 @@ const GameComponent = () => {
   }, [numbers, currentStarsCount]);
 
   const initGame = () => {
-    setIsGameOver(false);
     dispatchNumbers({ type: "INIT", gameLimit });
     dispatchStarsCount({ type: "INIT", numbers });
   };
+
   if (isGameOver)
     return (
       <div style={{ textAlign: "center" }}>
         You Won
         <div>
+          {/* FIXME: User has to click twice to activate the function. */}
           <button onClick={initGame}>Play again?</button>
         </div>
       </div>

@@ -23,7 +23,6 @@ const StarsComponent = (props) => {
       top: square.top
     }));
   }, [divStyle.borderWidth, props.height, props.width, props.number, squareSize]);
-  //TODO: Do that in a better way
 
   return (
     <>
