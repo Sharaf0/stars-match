@@ -11,7 +11,7 @@ export const initializeNumbersReducer = (gameLimit) => {
 export const numbersReducer = (state, action) => {
   switch (action.type) {
     case "INIT":
-      return initializeNumbersReducer(action.gameLimit);
+      return action.numbers;
     case "CLICKED_ON_DEFAULT":
       const sumOfMarkedAndWrong =
         state

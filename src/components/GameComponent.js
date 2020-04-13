@@ -1,17 +1,14 @@
 import React, { useEffect, useCallback, useReducer, useMemo } from "react";
 import NumbersComponent from "./NumbersComponent";
 import StarsComponent from "./StarsComponent";
-import { getNextStarsCount, starsReducer } from '../reducers/starsReducer';
+import { starsReducer } from '../reducers/starsReducer';
 import { initializeNumbersReducer, numbersReducer } from "../reducers/numbersReducer";
 
-const GameComponent = () => {
+
+const GameComponent = ({ config }) => {
   //TODO: Move this Config to .json or so
-  const gameLimit = 15;
-  const starSize = 50;
-  const starsHeight = 400;
-  const starsWidth = 400;
-  const [numbers, dispatchNumbers] = useReducer(numbersReducer, gameLimit, initializeNumbersReducer);
-  const [currentStarsCount, dispatchStarsCount] = useReducer(starsReducer, numbers, getNextStarsCount);
+  const [numbers, dispatchNumbers] = useReducer(numbersReducer, null);
+  const [currentStarsCount, dispatchStarsCount] = useReducer(starsReducer, null);
   const isGameOver = useMemo(() => {
     return currentStarsCount === 0;
   }, [currentStarsCount]);
@@ -47,7 +44,8 @@ const GameComponent = () => {
   }, [numbers, currentStarsCount]);
 
   const initGame = () => {
-    dispatchNumbers({ type: "INIT", gameLimit });
+    const numbers = initializeNumbersReducer(config.gameLimit);
+    dispatchNumbers({ type: "INIT", numbers });
     dispatchStarsCount({ type: "INIT", numbers });
   };
 
@@ -56,11 +54,14 @@ const GameComponent = () => {
       <div style={{ textAlign: "center" }}>
         You Won
         <div>
-          {/* FIXME: User has to click twice to activate the function. */}
           <button onClick={initGame}>Play again?</button>
         </div>
       </div>
     );
+
+  if (numbers === null) {
+    return 'loading...';
+  }
 
   return (
     <div className="container">
@@ -68,9 +69,9 @@ const GameComponent = () => {
         <div style={{ textAlign: "center" }} className="col-lg-6">
           <StarsComponent
             number={currentStarsCount}
-            height={starsHeight}
-            width={starsWidth}
-            starSize={starSize}
+            height={config.starsHeight}
+            width={config.starsWidth}
+            starSize={config.starSize}
           ></StarsComponent>
         </div>
         <div style={{ textAlign: "center" }} className="col-lg-6">
